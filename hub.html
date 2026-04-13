@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DISC Hub · Konclui</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  :root{
+    --D:#7F77DD;--Dl:#EDEAFF;--Dd:#5043C0;
+    --I:#EF9F27;--Il:#FEF4DC;--Id:#B87000;
+    --S:#1D9E75;--Sl:#D5F5EB;--Sd:#0E6B4F;
+    --C:#378ADD;--Cl:#DCEEFF;--Cd:#1557A6;
+    --bg:#F7F8FC;--card:#fff;--nav:#16192A;
+    --text:#16192A;--text2:#6B7280;--border:#E5E7EB;--r:12px;
+  }
+  body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  /* LOGIN */
+  .lw{min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--nav);}
+  .lc{background:#fff;border-radius:20px;padding:40px 48px;width:100%;max-width:420px;}
+  .ll{font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--text2);margin-bottom:6px;}
+  .lt{font-size:28px;font-weight:800;margin-bottom:32px;}
+  .fg{margin-bottom:16px;}
+  .fg label{display:block;font-size:12px;font-weight:700;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px;}
+  .fg input{width:100%;padding:12px 16px;border:1.5px solid var(--border);border-radius:8px;font-size:15px;font-family:inherit;outline:none;transition:border-color .2s;}
+  .fg input:focus{border-color:var(--D);}
+  .bp{width:100%;padding:14px;background:var(--D);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .bp:hover{opacity:.9;}
+  .lerr{color:#E53E3E;font-size:13px;margin-top:8px;display:none;}
+
+  /* SETUP */
+  .sw{min-height:100vh;background:var(--nav);display:flex;align-items:center;justify-content:center;padding:24px;}
+  .sc{background:#fff;border-radius:20px;padding:40px 48px;width:100%;max-width:560px;}
+
+  /* APP SHELL */
+  .shell{display:flex;min-height:100vh;}
+  .sidebar{width:220px;background:var(--nav);position:fixed;top:0;left:0;height:100vh;display:flex;flex-direction:column;padding:0;z-index:100;}
+  .slogo{padding:24px 20px;border-bottom:1px solid rgba(255,255,255,.08);}
+  .slogo .an{font-size:18px;font-weight:800;color:#fff;}
+  .slogo .as{font-size:11px;color:rgba(255,255,255,.4);letter-spacing:1px;text-transform:uppercase;}
+  .nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;margin:2px 8px;border-radius:8px;cursor:pointer;color:rgba(255,255,255,.55);font-size:14px;font-weight:500;transition:all .15s;border:none;background:none;font-family:inherit;width:calc(100% - 16px);text-align:left;}
+  .nav-item:hover{background:rgba(255,255,255,.06);color:#fff;}
+  .nav-item.active{background:rgba(127,119,221,.25);color:#fff;}
+  .nav-icon{font-size:16px;width:20px;text-align:center;}
+  .sbottom{margin-top:auto;padding:12px;}
+  .upill{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,.07);border-radius:10px;}
+  .av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0;}
+  .main{margin-left:220px;flex:1;min-height:100vh;}
+  .ph{padding:28px 32px 0;}
+  .pt{font-size:22px;font-weight:800;}
+  .ps{font-size:14px;color:var(--text2);margin-top:4px;}
+  .pc{padding:24px 32px;}
+
+  /* TABS */
+  .tabs{display:flex;gap:4px;border-bottom:2px solid var(--border);margin-bottom:24px;}
+  .tab-btn{padding:10px 16px;font-size:14px;font-weight:600;color:var(--text2);background:none;border:none;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .15s;font-family:inherit;}
+  .tab-btn.active{color:var(--D);border-bottom-color:var(--D);}
+  .tab-btn:hover:not(.active){color:var(--text);}
+
+  /* CARDS */
+  .card{background:var(--card);border-radius:var(--r);padding:20px 24px;border:1px solid var(--border);}
+  .ct{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:4px;}
+  .cv{font-size:32px;font-weight:800;}
+  .g4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  .g2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .g3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+
+  /* DISC BADGE */
+  .db{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:6px;font-weight:800;font-size:13px;flex-shrink:0;}
+  .db.D{background:var(--Dl);color:var(--Dd);}
+  .db.I{background:var(--Il);color:var(--Id);}
+  .db.S{background:var(--Sl);color:var(--Sd);}
+  .db.C{background:var(--Cl);color:var(--Cd);}
+  .db.none{background:#F3F4F6;color:#9CA3AF;}
+
+  /* QUIZ */
+  .qcard{background:var(--card);border-radius:var(--r);padding:32px;max-width:600px;border:1px solid var(--border);}
+  .qprog{display:flex;gap:6px;margin-bottom:24px;}
+  .qdot{flex:1;height:4px;border-radius:2px;background:var(--border);transition:background .3s;}
+  .qdot.done{background:var(--D);}
+  .qq{font-size:18px;font-weight:700;margin-bottom:20px;line-height:1.4;}
+  .qopts{display:flex;flex-direction:column;gap:10px;}
+  .qopt{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;background:#fff;font-family:inherit;text-align:left;transition:all .15s;width:100%;}
+  .qopt:hover{border-color:var(--D);background:var(--Dl);}
+  .qopt.sel{border-color:var(--D);background:var(--Dl);}
+  .qe{font-size:20px;flex-shrink:0;}
+  .qt{font-size:14px;color:var(--text);line-height:1.5;}
+  .qnav{display:flex;justify-content:space-between;align-items:center;margin-top:20px;}
+  .bnext{padding:12px 24px;background:var(--D);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;}
+  .bnext:disabled{opacity:.35;cursor:default;}
+  .bsm{padding:7px 14px;border:1.5px solid var(--border);border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;background:#fff;font-family:inherit;color:var(--text);}
+  .bsm:disabled{opacity:.4;cursor:default;}
+
+  /* RESULT */
+  .rh{border-radius:var(--r) var(--r) 0 0;padding:28px 32px;color:#fff;}
+  .rb{background:#fff;border:1px solid var(--border);border-top:none;border-radius:0 0 var(--r) var(--r);padding:24px 32px;}
+  .ibox{background:var(--bg);border-radius:10px;padding:16px 20px;margin-bottom:20px;font-size:14px;line-height:1.6;}
+  .alist{list-style:none;display:flex;flex-direction:column;gap:10px;margin-bottom:20px;}
+  .anum{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0;margin-top:1px;}
+
+  /* OUTCOME */
+  .obox{border-top:1px solid var(--border);padding-top:20px;margin-top:20px;}
+  .oopts{display:flex;gap:10px;margin-top:10px;}
+  .obtn{flex:1;padding:12px;border:2px solid var(--border);border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;background:#fff;font-family:inherit;transition:all .15s;}
+  .obtn.g{color:#059669;} .obtn.g:hover,.obtn.g.sel{background:#D1FAE5;border-color:#059669;}
+  .obtn.f{color:#D97706;} .obtn.f:hover,.obtn.f.sel{background:#FEF3C7;border-color:#D97706;}
+  .obtn.p{color:#DC2626;} .obtn.p:hover,.obtn.p.sel{background:#FEE2E2;border-color:#DC2626;}
+  .bcta{padding:12px 24px;background:var(--D);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;margin-top:12px;width:100%;}
+
+  /* HISTORY */
+  .mr{display:flex;align-items:center;gap:12px;padding:14px 0;border-bottom:1px solid var(--border);}
+  .mr:last-child{border-bottom:none;}
+  .otag{font-size:12px;font-weight:700;padding:4px 10px;border-radius:20px;white-space:nowrap;}
+  .otag.ganho{background:#D1FAE5;color:#059669;}
+  .otag.followup{background:#FEF3C7;color:#D97706;}
+  .otag.perdido{background:#FEE2E2;color:#DC2626;}
+  .otag.pend{background:#F3F4F6;color:#6B7280;}
+
+  /* STAT BARS */
+  .sbr{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .sbl{width:24px;font-size:12px;font-weight:800;text-align:center;}
+  .sbt{flex:1;height:10px;background:var(--border);border-radius:5px;overflow:hidden;}
+  .sbf{height:100%;border-radius:5px;transition:width .6s cubic-bezier(.4,0,.2,1);}
+  .sbn{width:36px;font-size:12px;color:var(--text2);text-align:right;}
+
+  /* MEMBER CARD */
+  .mc{background:#fff;border:1px solid var(--border);border-radius:var(--r);padding:16px 20px;display:flex;align-items:center;gap:14px;}
+
+  /* MISC */
+  .st{font-size:16px;font-weight:700;margin-bottom:16px;}
+  .es{text-align:center;padding:48px 0;color:var(--text2);}
+  .sbanner{background:#D1FAE5;border:1px solid #6EE7B7;border-radius:10px;padding:14px 20px;font-size:14px;color:#065F46;font-weight:600;margin-bottom:20px;}
+  .fr{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .nsection{font-size:12px;font-weight:700;color:rgba(255,255,255,.3);text-transform:uppercase;letter-spacing:1.5px;padding:20px 20px 6px;}
+
+  @media(max-width:768px){
+    .sidebar{width:60px;}
+    .slogo,.nsection,nav-item span,.upill>div{display:none;}
+    .nav-item{justify-content:center;padding:12px;margin:2px 4px;width:calc(100% - 8px);}
+    .main{margin-left:60px;}
+    .g4{grid-template-columns:repeat(2,1fr);}
+    .g3{grid-template-columns:1fr 1fr;}
+    .pc{padding:16px;}
+    .ph{padding:16px 16px 0;}
+    .fr{grid-template-columns:1fr;}
+    .sc,.lc{padding:28px 24px;}
+    .qcard,.rb{padding:20px;}
+  }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ═══════════════════════════════════════════════════════════
+   CONFIG
+═══════════════════════════════════════════════════════════ */
+const USERS = {
+  talles:   {name:'Talles Lennin',        role:'gerente',    squad:null,      sup:null,       pass:'talles'},
+  denis:    {name:'Denis Ferelli',        role:'supervisor', squad:'furacao', sup:null,       pass:'denis'},
+  isabella: {name:'Isabella Mendes',      role:'supervisor', squad:'elite',   sup:null,       pass:'isabella'},
+  rafael:   {name:'Rafael Paixão',        role:'supervisor', squad:'rafael',  sup:null,       pass:'rafael'},
+  denise:   {name:'Denise Mendes',        role:'closer',     squad:'furacao', sup:'denis',    pass:'denise'},
+  nayara:   {name:'Nayara Raunik',        role:'closer',     squad:'furacao', sup:'denis',    pass:'nayara'},
+  lucas:    {name:'Lucas Aoqui',          role:'closer',     squad:'furacao', sup:'denis',    pass:'lucas'},
+  igor:     {name:'Igor Toscano',         role:'closer',     squad:'furacao', sup:'denis',    pass:'igor'},
+  wesley:   {name:'Wesley Moura',         role:'closer',     squad:'furacao', sup:'denis',    pass:'wesley'},
+  flavia:   {name:'Flávia Garchet',       role:'closer',     squad:'furacao', sup:'denis',    pass:'flavia'},
+  valmor:   {name:'Valmor Santana',       role:'closer',     squad:'furacao', sup:'denis',    pass:'valmor'},
+  gabriel:  {name:'Gabriel Veloso',       role:'closer',     squad:'furacao', sup:'denis',    pass:'gabriel'},
+  bruno:    {name:'Bruno Lourenço',       role:'closer',     squad:'elite',   sup:'isabella', pass:'bruno'},
+  cibeli:   {name:'Cibeli Xavier',        role:'closer',     squad:'elite',   sup:'isabella', pass:'cibeli'},
+  david:    {name:'David Ribeiro',        role:'closer',     squad:'elite',   sup:'isabella', pass:'david'},
+  ester:    {name:'Ester Ganzer',         role:'closer',     squad:'elite',   sup:'isabella', pass:'ester'},
+  evandro:  {name:'Evandro Pellegrini',   role:'closer',     squad:'elite',   sup:'isabella', pass:'evandro'},
+  fernanda: {name:'Fernanda Barbosa',     role:'closer',     squad:'elite',   sup:'isabella', pass:'fernanda'},
+  leandro:  {name:'Leandro Araújo',       role:'closer',     squad:'elite',   sup:'isabella', pass:'leandro'},
+  natalya:  {name:'Natalya Lopes',        role:'closer',     squad:'elite',   sup:'isabella', pass:'natalya'},
+};
+
+const SQUADS = {
+  furacao: {name:'Squad Furacão', sup:'denis',    color:'#7F77DD'},
+  elite:   {name:'Squad Elite',   sup:'isabella', color:'#EF9F27'},
+  rafael:  {name:'Squad Rafael',  sup:'rafael',   color:'#1D9E75'},
+};
+
+const DISC_META = {
+  D:{name:'Dominante',    color:'#7F77DD',light:'#EDEAFF',dark:'#5043C0'},
+  I:{name:'Influente',    color:'#EF9F27',light:'#FEF4DC',dark:'#B87000'},
+  S:{name:'Estável',      color:'#1D9E75',light:'#D5F5EB',dark:'#0E6B4F'},
+  C:{name:'Conformidade', color:'#378ADD',light:'#DCEEFF',dark:'#1557A6'},
+};
+
+/* ═══════════════════════════════════════════════════════════
+   PERGUNTAS — AUTOAVALIAÇÃO (8)
+═══════════════════════════════════════════════════════════ */
+const SELF_QS = [
+  // Q1: ordem S, D, C, I
+  {text:'Em uma reunião de venda com um novo cliente, o que vem mais naturalmente para você?',
+   opts:[{l:'A',t:'Ouvir bastante antes de propor qualquer coisa',p:'S'},
+         {l:'B',t:'Ir direto ao ponto e apresentar a solução com clareza — sem perder tempo',p:'D'},
+         {l:'C',t:'Fazer perguntas técnicas para entender bem a situação antes de apresentar',p:'C'},
+         {l:'D',t:'Criar conexão primeiro, bater um papo antes de falar de negócio',p:'I'}]},
+  // Q2: ordem I, C, D, S
+  {text:'Quando um cliente te dá uma objeção forte ("tá caro", "não é o momento"), você tende a...',
+   opts:[{l:'A',t:'Entender a preocupação dele e redirecionar com energia e entusiasmo',p:'I'},
+         {l:'B',t:'Anotar a objeção e se comprometer a voltar com a resposta precisa',p:'C'},
+         {l:'C',t:'Rebater com firmeza e dados concretos — não deixa a objeção ficar sem resposta',p:'D'},
+         {l:'D',t:'Dar espaço, não pressionar, e buscar o próximo passo com calma',p:'S'}]},
+  // Q3: ordem C, S, I, D
+  {text:'Como você prefere se preparar para uma call com um dono de restaurante?',
+   opts:[{l:'A',t:'Levantando dados, comparativos e especificações para responder qualquer dúvida técnica',p:'C'},
+         {l:'B',t:'Entendendo o momento atual do negócio e quem está envolvido nas decisões',p:'S'},
+         {l:'C',t:'Pesquisando sobre a pessoa e o restaurante para criar pontos de conexão',p:'I'},
+         {l:'D',t:'Revisando os resultados e cases para apresentar de forma concisa e impactante',p:'D'}]},
+  // Q4: ordem D, C, S, I
+  {text:'No fechamento, como você age?',
+   opts:[{l:'A',t:'Sou direto: "Vamos fechar agora?" — não deixo a reunião terminar sem uma decisão',p:'D'},
+         {l:'B',t:'Apresento comparativos, respondo tudo com precisão, envio material técnico completo',p:'C'},
+         {l:'C',t:'Ofereço opções gentis, mando um resumo por escrito, deixo o cliente confortável',p:'S'},
+         {l:'D',t:'Crio urgência emocional: "Imagina isso já rodando no seu restaurante amanhã!"',p:'I'}]},
+  // Q5: ordem C, I, D, S
+  {text:'O que mais te incomoda em uma call que não foi bem?',
+   opts:[{l:'A',t:'Insegurança por não ter estado preparado para alguma pergunta técnica',p:'C'},
+         {l:'B',t:'Frustração de não ter criado conexão — o cliente ficou "fechado"',p:'I'},
+         {l:'C',t:'Sinto que perdi tempo — não fui eficiente o suficiente',p:'D'},
+         {l:'D',t:'Preocupação de não ter transmitido segurança suficiente',p:'S'}]},
+  // Q6: ordem I, D, S, C
+  {text:'Como você descreveria seu jeito natural de se comunicar em vendas?',
+   opts:[{l:'A',t:'Caloroso, animado, fácil de se relacionar — cria conexão naturalmente',p:'I'},
+         {l:'B',t:'Direto, objetivo, sem rodeios — vai direto ao que importa',p:'D'},
+         {l:'C',t:'Calmo, paciente, ouve mais do que fala — dá espaço pro cliente',p:'S'},
+         {l:'D',t:'Preciso, formal, escolhe bem as palavras — constrói credibilidade com informação',p:'C'}]},
+  // Q7: ordem S, C, I, D
+  {text:'O que mais te trava ou te desconforta em um processo de venda?',
+   opts:[{l:'A',t:'Sentir que estou pressionando demais alguém que não está pronto',p:'S'},
+         {l:'B',t:'Não ter dados suficientes para responder as perguntas do cliente com precisão',p:'C'},
+         {l:'C',t:'Clientes muito "fechados" ou com pouca energia na reunião',p:'I'},
+         {l:'D',t:'Clientes indecisos ou processos lentos demais',p:'D'}]},
+  // Q8: ordem I, S, D, C
+  {text:'Qual frase descreve melhor como você age numa venda?',
+   opts:[{l:'A',t:'Conto histórias de clientes, deixo a energia alta, faço ele se imaginar usando',p:'I'},
+         {l:'B',t:'Escuto muito, entendo o momento dele, só proponho quando ele está confortável',p:'S'},
+         {l:'C',t:'Apresento com confiança, mostro o valor, proponho o próximo passo — sem enrolar',p:'D'},
+         {l:'D',t:'Faço perguntas técnicas, entendo cada detalhe, e só fecho quando todas as dúvidas somem',p:'C'}]},
+];
+
+/* ═══════════════════════════════════════════════════════════
+   PERGUNTAS — IDENTIFICAÇÃO DO CLIENTE (4)
+═══════════════════════════════════════════════════════════ */
+const CLIENT_QS = [
+  {text:'Como ele reage ao bate-papo inicial (antes de entrar no assunto)?',
+   opts:[{e:'🎯',t:'"Pode falar." / "Bora." — responde curto e já quer entrar direto no assunto',p:'D'},
+         {e:'😄',t:'Entra no papo — pergunta de onde você é, conta algo, clima animado desde o início',p:'I'},
+         {e:'🤝',t:'Responde com educação, segue o seu ritmo, não puxa conversa por conta própria',p:'S'},
+         {e:'📋',t:'Vai logo posicionando o contexto: "já uso tal ferramenta, mas o problema é..." antes de qualquer papo',p:'C'}]},
+  {text:'Quando você pede "me conta do seu negócio", ele...',
+   opts:[{e:'🎯',t:'Cita escala ou números logo — operações, funcionários, faturamento, sem ser perguntado',p:'D'},
+         {e:'😄',t:'Conta a história — nome do lugar, bairro, quanto tempo tem, parece orgulhoso ao descrever',p:'I'},
+         {e:'🤝',t:'Dá o básico e espera você perguntar mais — não elabora por conta própria',p:'S'},
+         {e:'📋',t:'Explica o que já tem e qual a lacuna: "faço tudo no WhatsApp/Excel, mas não funciona porque..."',p:'C'}]},
+  {text:'Qual é o tom das primeiras respostas dele?',
+   opts:[{e:'🎯',t:'Assertivo — às vezes corrige um detalhe seu ou completa sua frase sem cerimônia',p:'D'},
+         {e:'😄',t:'Caloroso — usa "a gente", conta casos vividos, compartilha mais do que você pediu',p:'I'},
+         {e:'🤝',t:'Concordante — muito "aham", "sim", "uhum" — pouca elaboração própria',p:'S'},
+         {e:'📋',t:'Contextual — dá contexto antes de responder, detalha, faz ressalvas antes de confirmar',p:'C'}]},
+  {text:'O que ele faz quando você menciona o que a Konclui faz?',
+   opts:[{e:'🎯',t:'Quer saber logo o resultado prático ou o custo — "quanto custa?" / "o que resolve de verdade?"',p:'D'},
+         {e:'😄',t:'Conecta com uma situação vivida — "ah, porque lá no meu acontece exatamente isso..."',p:'I'},
+         {e:'🤝',t:'Escuta, confirma com "sim" e deixa você continuar — sem interromper',p:'S'},
+         {e:'📋',t:'Pergunta sobre compatibilidade ou personalização — "funciona para hortifruti?" / "dá para adaptar?"',p:'C'}]},
+];
+
+/* ═══════════════════════════════════════════════════════════
+   PERFIS — ORIENTAÇÕES CONTEXTUALIZADAS
+═══════════════════════════════════════════════════════════ */
+const PROFILES = {
+  D:{
+    insight:'Esse dono de restaurante está pensando: "Isso resolve meu problema ou não? Me diz em 2 minutos." Ele tem múltiplas coisas na cabeça, não quer papo longo. Se sentir que você está enrolando, vai perder o interesse.',
+    how:['Mostre o resultado primeiro — abra o dashboard e diga: "Você enxerga tudo em tempo real, de qualquer lugar"',
+         'Use o case concreto: "Um cliente identificou R$6 mil de desperdício nos primeiros 30 dias"',
+         'Foque na promessa central: "Sua operação rodando no padrão sem você precisar estar lá"',
+         'Seja firme e seguro — ele respeita quem não titubeia',
+         'Feche com clareza: "Quer testar? Setup é em 1 hora, você começa amanhã"'],
+    avoid:'Demo longa, ser didático demais, tom inseguro ou subserviente, deixar a call terminar sem uma proposta clara.',
+    impact:'"Em 24h você já vê toda a sua operação no celular — sem precisar estar lá."',
+  },
+  I:{
+    insight:'Esse dono de restaurante quer sentir que você é parceiro, não fornecedor. Ele se empolga fácil — mas se a call for fria ou técnica demais, perde o interesse. A decisão dele vai ser emocional: "Confio nessa pessoa?"',
+    how:['Invista os primeiros 5 min perguntando sobre o restaurante — deixe ele contar a história dele',
+         'Use cases com nome: "O Samuel, que tem 3 unidades em SP, me disse que..."',
+         'Mostre o app da equipe — "é simples, eles usam no celular, não tem resistência"',
+         'Mencione nomes conhecidos: Subway, China In Box — cria referência social',
+         'Termine visualizando: "Imagina você receber a notificação que tudo foi feito corretamente hoje à noite"'],
+    avoid:'Call fria ou excessivamente técnica, falar só de dados e funcionalidades, não criar conexão pessoal antes de falar de produto.',
+    impact:'"Sua equipe já vai começar a usar no dia seguinte — é intuitivo e eles adoram."',
+  },
+  S:{
+    insight:'Esse dono de restaurante provavelmente já tem processos funcionando "do jeito dele" e tem medo de bagunçar o que funciona. Ele precisa confiar em você antes de comprar — não na plataforma, em você.',
+    how:['Comece mostrando a agenda da call — ele precisa saber onde está em cada momento',
+         'Destaque o que não muda: "Sua equipe continua fazendo o mesmo — só agora com evidência e acompanhamento"',
+         'Fale do suporte: "Você tem suporte pelo WhatsApp — não fica sozinho"',
+         'Use o case da implementação suave: "Uma cliente ligou para contar que no dia seguinte já viu a equipe usando sozinha"',
+         'Não pressione para fechar na primeira call — envie um resumo por escrito e marque um follow-up'],
+    avoid:'Pressionar para fechar na mesma call, falar em muitas mudanças de uma vez, criar urgência artificial.',
+    impact:'"Implementação em 1 dia, suporte pelo WhatsApp — você não vai estar sozinho nesse processo."',
+  },
+  C:{
+    insight:'Esse dono de restaurante vai pesquisar outras opções antes de decidir. O silêncio dele não é desinteresse — ele está processando. Quando fizer uma pergunta técnica, é porque está levando a sério. Nunca responda com "eu acho".',
+    how:['Mostre o dashboard com o score 0–100 por unidade — ele quer ver que é mensurável',
+         'Explique a lógica da foto obrigatória: "Não é checklist de confiança — é evidência auditável"',
+         'Fale de histórico e rastreabilidade: "Você tem o registro de tudo, quando, por quem"',
+         'Se perguntar algo que você não sabe: "Vou verificar e te mando ainda hoje" — nunca improvise',
+         'Envie material técnico completo após a call — ele vai ler'],
+    avoid:'Dados vagos ou imprecisos, "eu acho", prometer funcionalidades sem confirmar, apressar a decisão.',
+    impact:'"O dashboard dá um score de 0 a 100 por unidade, com evidência fotográfica — você sabe exatamente onde está cada problema."',
+  },
+};
+
+/* ═══════════════════════════════════════════════════════════
+   STORAGE
+═══════════════════════════════════════════════════════════ */
+const DB = {
+  getMeetings(){ return JSON.parse(localStorage.getItem('kh_m')||'[]'); },
+  addMeeting(m){ const a=this.getMeetings(); a.push(m); localStorage.setItem('kh_m',JSON.stringify(a)); },
+  editMeeting(id,upd){
+    const a=this.getMeetings();
+    const i=a.findIndex(x=>x.id===id);
+    if(i>=0){ a[i]={...a[i],...upd}; localStorage.setItem('kh_m',JSON.stringify(a)); }
+  },
+  getProfiles(){ return JSON.parse(localStorage.getItem('kh_p')||'{}'); },
+  setProfile(u,p){
+    const a=this.getProfiles();
+    if(p===null){ delete a[u]; } else { a[u]=p; }
+    localStorage.setItem('kh_p',JSON.stringify(a));
+  },
+  getProfile(u){ return this.getProfiles()[u]||null; },
+};
+
+/* ═══════════════════════════════════════════════════════════
+   STATE
+═══════════════════════════════════════════════════════════ */
+let S = {
+  view:'login',   // login | setup | app
+  user:null,
+  tab:0,
+  setup:{idx:0,ans:[]},
+  mf:{            // meeting flow
+    on:false, step:'form',
+    client:'', date:td(), time:tnow(),
+    qi:0, ans:[], profile:null, outcome:null, sid:null,
+  },
+  editing:null,   // meeting id being edited in history
+};
+
+function td(){ return new Date().toISOString().split('T')[0]; }
+function tnow(){ return new Date().toTimeString().slice(0,5); }
+
+/* ═══════════════════════════════════════════════════════════
+   HELPERS
+═══════════════════════════════════════════════════════════ */
+function ini(n){ return n.split(' ').slice(0,2).map(x=>x[0]).join('').toUpperCase(); }
+function dc(p){ return p?DISC_META[p].color:'#9CA3AF'; }
+function dl(p){ return p?DISC_META[p].light:'#F3F4F6'; }
+function dd(p){ return p?DISC_META[p].dark:'#6B7280'; }
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function fd(iso){ if(!iso)return''; const[y,m,d]=iso.split('-'); return`${d}/${m}/${y}`; }
+
+function detectDisc(ans){
+  const c={D:0,I:0,S:0,C:0};
+  ans.forEach(a=>{ if(c[a]!==undefined)c[a]++; });
+  return Object.entries(c).sort((a,b)=>b[1]-a[1])[0][0];
+}
+
+function closerMeetings(u){ return DB.getMeetings().filter(m=>m.closer===u); }
+function squadMeetings(sq){
+  const cl=Object.keys(USERS).filter(k=>USERS[k].squad===sq&&USERS[k].role==='closer');
+  return DB.getMeetings().filter(m=>cl.includes(m.closer));
+}
+function convRate(ms){
+  const d=ms.filter(m=>m.outcome==='ganho'||m.outcome==='perdido');
+  if(!d.length)return null;
+  return Math.round(ms.filter(m=>m.outcome==='ganho').length/d.length*100);
+}
+function pStats(ms){
+  return ['D','I','S','C'].map(p=>{
+    const sub=ms.filter(m=>m.cp===p);
+    return{p,n:sub.length,conv:convRate(sub)};
+  });
+}
+
+/* ═══════════════════════════════════════════════════════════
+   RENDER
+═══════════════════════════════════════════════════════════ */
+function R(){
+  document.getElementById('app').innerHTML = html();
+  bind();
+}
+function html(){
+  if(S.view==='login') return loginH();
+  if(S.view==='setup') return setupH();
+  return appH();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   LOGIN
+═══════════════════════════════════════════════════════════ */
+function loginH(){
+  return`<div class="lw"><div class="lc">
+    <div class="ll">Konclui</div>
+    <div class="lt">DISC Hub</div>
+    <div class="fg"><label>Usuário</label><input id="lu" type="text" placeholder="ex: flavia" autocomplete="username"/></div>
+    <div class="fg"><label>Senha</label><input id="lp" type="password" placeholder="senha" autocomplete="current-password"/></div>
+    <button class="bp" onclick="login()">Entrar</button>
+    <div id="le" class="lerr">Usuário ou senha incorretos.</div>
+  </div></div>`;
+}
+function login(){
+  const u=document.getElementById('lu').value.trim().toLowerCase();
+  const p=document.getElementById('lp').value.trim();
+  const user=USERS[u];
+  if(!user||user.pass!==p){ document.getElementById('le').style.display='block'; return; }
+  S.user=u;
+  if(!DB.getProfile(u)){ S.view='setup'; S.setup={idx:0,ans:[]}; }
+  else { S.view='app'; S.tab=0; }
+  R();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SETUP (autoavaliação DISC)
+═══════════════════════════════════════════════════════════ */
+function setupH(){
+  const{idx,ans}=S.setup; const q=SELF_QS[idx]; const sel=ans[idx]; const tot=SELF_QS.length;
+  return`<div class="sw"><div class="sc">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--text2);margin-bottom:8px">Meu perfil DISC · ${idx+1} de ${tot}</div>
+    <div style="display:flex;gap:5px;margin-bottom:24px">
+      ${SELF_QS.map((_,i)=>`<div style="flex:1;height:4px;border-radius:2px;background:${i<idx?'#7F77DD':i===idx?'#C4C0F5':'#E5E7EB'}"></div>`).join('')}
+    </div>
+    <div style="font-size:18px;font-weight:700;line-height:1.4;margin-bottom:22px">${q.text}</div>
+    <div style="display:flex;flex-direction:column;gap:10px">
+      ${q.opts.map(o=>`
+        <button class="qopt${sel===o.p?' sel':''}" onclick="sPick('${o.p}')">
+          <div style="width:28px;height:28px;border-radius:6px;background:${sel===o.p?'var(--D)':'#E5E7EB'};color:${sel===o.p?'#fff':'#6B7280'};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0">${o.l}</div>
+          <div class="qt">${o.t}</div>
+        </button>`).join('')}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px">
+      <button class="bsm" onclick="sBack()" ${idx===0?'disabled':''}>← Voltar</button>
+      <span style="font-size:13px;color:var(--text2)">${idx+1}/${tot}</span>
+      <button class="bnext" onclick="sNext()" ${!sel?'disabled':''}>${idx===tot-1?'Ver meu perfil':'Próxima →'}</button>
+    </div>
+  </div></div>`;
+}
+function sPick(p){ S.setup.ans[S.setup.idx]=p; R(); }
+function sBack(){ if(S.setup.idx>0){S.setup.idx--;R();} }
+function sNext(){
+  const sel=S.setup.ans[S.setup.idx]; if(!sel)return;
+  if(S.setup.idx<SELF_QS.length-1){ S.setup.idx++; R(); }
+  else{
+    const profile=detectDisc(S.setup.ans);
+    DB.setProfile(S.user,{profile,ans:S.setup.ans});
+    S.view='app'; S.tab=0; R();
+  }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   APP SHELL
+═══════════════════════════════════════════════════════════ */
+function appH(){
+  const u=USERS[S.user]; const pr=DB.getProfile(S.user); const up=pr?pr.profile:null;
+  const nav=navItems();
+  return`<div class="shell">
+    <nav class="sidebar">
+      <div class="slogo"><div class="an">DISC Hub</div><div class="as">Konclui</div></div>
+      <div style="padding:8px 0;flex:1;overflow-y:auto">
+        <div class="nsection">Menu</div>
+        ${nav.map(n=>`<button class="nav-item${S.tab===n.t?' active':''}" onclick="setTab(${n.t})">
+          <span class="nav-icon">${n.i}</span><span>${n.l}</span>
+        </button>`).join('')}
+      </div>
+      <div class="sbottom">
+        <div class="upill">
+          <div class="av" style="background:${dc(up)}">${ini(u.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:13px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${u.name.split(' ')[0]}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,.45)">${u.role==='gerente'?'Gerente':u.role==='supervisor'?'Supervisor':'Closer'}</div>
+          </div>
+        </div>
+        <button onclick="logout()" style="width:100%;margin-top:8px;padding:8px;background:rgba(255,255,255,.05);border:none;border-radius:8px;color:rgba(255,255,255,.4);font-size:12px;cursor:pointer;font-family:inherit">Sair</button>
+      </div>
+    </nav>
+    <main class="main">${mainContent()}</main>
+  </div>`;
+}
+function navItems(){
+  const r=USERS[S.user].role;
+  if(r==='closer') return [{t:0,i:'➕',l:'Nova Reunião'},{t:1,i:'📋',l:'Histórico'},{t:2,i:'📊',l:'Desempenho'}];
+  if(r==='supervisor') return [{t:0,i:'👤',l:'Meu Perfil'},{t:1,i:'👥',l:'Meu Time'},{t:2,i:'📊',l:'Performance'}];
+  return [{t:0,i:'🏠',l:'Visão Geral'},{t:1,i:'⚡',l:'Squads'},{t:2,i:'👥',l:'Vendedores'}];
+}
+function mainContent(){
+  const r=USERS[S.user].role;
+  if(r==='closer') return closerV();
+  if(r==='supervisor') return supV();
+  return gerenteV();
+}
+function setTab(t){
+  S.tab=t; S.editing=null;
+  if(t===0&&USERS[S.user].role==='closer') S.mf={on:false,step:'form',client:'',date:td(),time:tnow(),qi:0,ans:[],profile:null,outcome:null,sid:null};
+  R();
+}
+function logout(){ S.user=null; S.view='login'; S.tab=0; R(); }
+
+/* ═══════════════════════════════════════════════════════════
+   CLOSER — NOVA REUNIÃO
+═══════════════════════════════════════════════════════════ */
+function closerV(){
+  if(S.tab===0) return mfV();
+  if(S.tab===1) return historyV();
+  return statsV();
+}
+
+function mfV(){
+  const m=S.mf;
+  if(!m.on) return`
+    <div class="ph"><div class="pt">Nova Reunião</div><div class="ps">Identifique o perfil do seu cliente nos primeiros minutos da call</div></div>
+    <div class="pc"><div class="qcard">
+      <div class="st">Dados da reunião</div>
+      <div class="fr">
+        <div class="fg"><label>Data</label><input type="date" id="md" value="${m.date}"/></div>
+        <div class="fg"><label>Horário</label><input type="time" id="mt" value="${m.time}"/></div>
+      </div>
+      <div class="fg"><label>Nome do cliente / empresa</label><input type="text" id="mc" placeholder="Ex: João Silva — Restaurante do João" value="${m.client}"/></div>
+      <button class="bcta" onclick="startMF()">Identificar perfil →</button>
+    </div></div>`;
+
+  if(m.step==='quiz') return mfQuiz();
+  if(m.step==='result') return mfResult();
+  return '';
+}
+
+function startMF(){
+  const d=document.getElementById('md').value;
+  const t=document.getElementById('mt').value;
+  const c=document.getElementById('mc').value.trim();
+  if(!c){alert('Preencha o nome do cliente');return;}
+  S.mf={on:true,step:'quiz',client:c,date:d,time:t,qi:0,ans:[],profile:null,outcome:null,sid:null};
+  R();
+}
+
+function mfQuiz(){
+  const m=S.mf; const q=CLIENT_QS[m.qi]; const sel=m.ans[m.qi];
+  return`
+    <div class="ph"><div class="pt">Identificando: ${m.client}</div><div class="ps">Pergunta ${m.qi+1} de ${CLIENT_QS.length}</div></div>
+    <div class="pc"><div class="qcard">
+      <div class="qprog">${CLIENT_QS.map((_,i)=>`<div class="qdot${i<=m.qi?' done':''}"></div>`).join('')}</div>
+      <div class="qq">${q.text}</div>
+      <div class="qopts">${q.opts.map(o=>`
+        <button class="qopt${sel===o.p?' sel':''}" onclick="cPick('${o.p}')">
+          <span class="qe">${o.e}</span><span class="qt">${o.t}</span>
+        </button>`).join('')}</div>
+      <div class="qnav">
+        <button class="bsm" onclick="cBack()" ${m.qi===0?'disabled':''}>← Voltar</button>
+        <button class="bnext" onclick="cNext()" ${!sel?'disabled':''}>${m.qi===CLIENT_QS.length-1?'Ver resultado →':'Próxima →'}</button>
+      </div>
+    </div></div>`;
+}
+function cPick(p){ S.mf.ans[S.mf.qi]=p; R(); }
+function cBack(){ if(S.mf.qi>0){S.mf.qi--;R();} }
+function cNext(){
+  const sel=S.mf.ans[S.mf.qi]; if(!sel)return;
+  if(S.mf.qi<CLIENT_QS.length-1){S.mf.qi++;R();}
+  else{ S.mf.profile=detectDisc(S.mf.ans); S.mf.step='result'; R(); }
+}
+
+function mfResult(){
+  const m=S.mf; const p=m.profile; const info=PROFILES[p]; const dm=DISC_META[p]; const saved=!!m.sid;
+  return`
+    <div class="ph"><div class="pt">Resultado: ${m.client}</div><div class="ps">${fd(m.date)} · ${m.time}</div></div>
+    <div class="pc">
+      ${saved?`<div class="sbanner">✅ Reunião salva! Você pode atualizar o resultado abaixo.</div>`:''}
+      <div style="max-width:600px">
+        <div class="rh" style="background:${dm.color}">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;opacity:.8">Perfil detectado</div>
+          <div style="font-size:30px;font-weight:800;margin-top:4px">${p} · ${dm.name}</div>
+          <div style="font-size:14px;opacity:.85;margin-top:4px">${m.client}</div>
+        </div>
+        <div class="rb">
+          <div class="ibox">${info.insight}</div>
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--text2);margin-bottom:12px">Como agir agora</div>
+          <ul class="alist">${info.how.map((h,i)=>`
+            <li style="display:flex;gap:12px;align-items:flex-start">
+              <div class="anum" style="background:${dm.light};color:${dm.dark}">${i+1}</div>
+              <div style="font-size:14px;line-height:1.5">${h}</div>
+            </li>`).join('')}</ul>
+          <div style="background:#FFF1F1;border:1px solid #FECACA;border-radius:10px;padding:14px 18px;font-size:13px;line-height:1.5;margin-bottom:12px">
+            <strong style="color:#DC2626;font-size:11px;text-transform:uppercase;letter-spacing:.5px">⚠ Evite</strong>
+            <div style="color:#7F1D1D;margin-top:4px">${info.avoid}</div>
+          </div>
+          <div style="background:${dm.light};border-radius:10px;padding:14px 18px;border-left:4px solid ${dm.color}">
+            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${dm.dark};margin-bottom:6px">Frase de impacto</div>
+            <div style="font-size:15px;font-style:italic;color:${dm.dark};font-weight:600">${info.impact}</div>
+          </div>
+          <div class="obox">
+            <div style="font-size:15px;font-weight:700;margin-bottom:10px">Resultado da reunião</div>
+            <div class="oopts">
+              <button class="obtn g${m.outcome==='ganho'?' sel':''}" onclick="setO('ganho')">🏆 Ganho</button>
+              <button class="obtn f${m.outcome==='followup'?' sel':''}" onclick="setO('followup')">🔄 Follow-up</button>
+              <button class="obtn p${m.outcome==='perdido'?' sel':''}" onclick="setO('perdido')">❌ Perdido</button>
+            </div>
+            ${!saved?`<button class="bcta" onclick="saveMtg()">Salvar reunião</button>`:''}
+          </div>
+        </div>
+      </div>
+    </div>`;
+}
+function setO(o){
+  S.mf.outcome=o;
+  if(S.mf.sid) DB.editMeeting(S.mf.sid,{outcome:o});
+  R();
+}
+function saveMtg(){
+  const m=S.mf; const id=uid();
+  DB.addMeeting({id,closer:S.user,squad:USERS[S.user].squad,
+    client:m.client,date:m.date,time:m.time,
+    cp:m.profile,ca:m.ans,outcome:m.outcome,ts:Date.now()});
+  S.mf.sid=id; R();
+}
+
+/* ═══════════════════════════════════════════════════════════
+   CLOSER — HISTÓRICO
+═══════════════════════════════════════════════════════════ */
+function historyV(){
+  const ms=closerMeetings(S.user).sort((a,b)=>b.ts-a.ts);
+  return`
+    <div class="ph"><div class="pt">Histórico</div><div class="ps">${ms.length} reunião${ms.length!==1?'s':''} registrada${ms.length!==1?'s':''}</div></div>
+    <div class="pc">
+      ${ms.length===0?`<div class="es"><div style="font-size:40px">📋</div><div style="margin-top:12px;font-size:14px">Nenhuma reunião ainda. Comece registrando sua próxima call.</div></div>`:`
+      <div class="card">
+        ${ms.map(m=>{
+          const ed=S.editing===m.id;
+          return`<div class="mr">
+            <div class="db ${m.cp}">${m.cp}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.client}</div>
+              <div style="font-size:12px;color:var(--text2)">${fd(m.date)}${m.time?' · '+m.time:''}</div>
+            </div>
+            ${ed?`<div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${['ganho','followup','perdido'].map(o=>`<button class="obtn ${o[0]}${m.outcome===o?' sel':''}" style="flex:0;padding:5px 10px;font-size:12px;border-radius:7px" onclick="qOutcome('${m.id}','${o}')">${o==='ganho'?'🏆':o==='followup'?'🔄':'❌'} ${o}</button>`).join('')}
+              <button class="bsm" onclick="cancelEd()">✕</button>
+            </div>`:`<>
+              <span class="otag ${m.outcome||'pend'}">${m.outcome==='ganho'?'🏆 Ganho':m.outcome==='followup'?'🔄 Follow-up':m.outcome==='perdido'?'❌ Perdido':'— Pendente'}</span>
+              <button class="bsm" onclick="startEd('${m.id}')">Editar</button>
+            </>`}
+          </div>`;
+        }).join('')}
+      </div>`}
+    </div>`;
+}
+function startEd(id){ S.editing=id; R(); }
+function cancelEd(){ S.editing=null; R(); }
+function qOutcome(id,o){ DB.editMeeting(id,{outcome:o}); S.editing=null; R(); }
+
+/* ═══════════════════════════════════════════════════════════
+   CLOSER — DESEMPENHO
+═══════════════════════════════════════════════════════════ */
+function statsV(){
+  const ms=closerMeetings(S.user);
+  const g=ms.filter(m=>m.outcome==='ganho').length;
+  const p=ms.filter(m=>m.outcome==='perdido').length;
+  const f=ms.filter(m=>m.outcome==='followup').length;
+  const d=g+p; const cr=d?Math.round(g/d*100):null;
+  const ps=pStats(ms); const mx=Math.max(...ps.map(x=>x.n),1);
+  const worst=ps.filter(x=>x.n>0&&x.conv!==null).sort((a,b)=>a.conv-b.conv)[0]||null;
+
+  return`
+    <div class="ph"><div class="pt">Meu Desempenho</div><div class="ps">Análise das suas reuniões</div></div>
+    <div class="pc">
+      <div class="g4" style="margin-bottom:20px">
+        <div class="card"><div class="ct">Reuniões</div><div class="cv">${ms.length}</div></div>
+        <div class="card"><div class="ct">Ganhos</div><div class="cv" style="color:#059669">${g}</div></div>
+        <div class="card"><div class="ct">Follow-up</div><div class="cv" style="color:#D97706">${f}</div></div>
+        <div class="card"><div class="ct">Conversão</div><div class="cv" style="color:var(--D)">${cr!==null?cr+'%':'—'}</div></div>
+      </div>
+      <div class="g2">
+        <div class="card"><div class="st">Reuniões por perfil</div>
+          ${ps.map(x=>`<div class="sbr">
+            <div class="sbl" style="color:${dc(x.p)}">${x.p}</div>
+            <div class="sbt"><div class="sbf" style="width:${x.n/mx*100}%;background:${dc(x.p)}"></div></div>
+            <div class="sbn">${x.n}</div>
+          </div>`).join('')}
+        </div>
+        <div class="card"><div class="st">Conversão por perfil</div>
+          ${ps.map(x=>`<div class="sbr">
+            <div class="sbl" style="color:${dc(x.p)}">${x.p}</div>
+            <div class="sbt"><div class="sbf" style="width:${x.conv||0}%;background:${dc(x.p)}"></div></div>
+            <div class="sbn">${x.conv!==null?x.conv+'%':'—'}</div>
+          </div>`).join('')}
+        </div>
+      </div>
+      ${worst?`<div class="card" style="margin-top:20px;border-left:4px solid ${dc(worst.p)}">
+        <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:${dc(worst.p)};margin-bottom:8px">💡 Plano de ação — perfil ${worst.p} (${worst.conv}% de conversão)</div>
+        <div style="font-size:14px;color:#374151;margin-bottom:14px">${PROFILES[worst.p].insight}</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:10px">O que fazer diferente:</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          ${PROFILES[worst.p].how.slice(0,3).map((h,i)=>`
+            <div style="display:flex;gap:10px;align-items:flex-start">
+              <div style="width:20px;height:20px;border-radius:50%;background:${dl(worst.p)};color:${dd(worst.p)};display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0">${i+1}</div>
+              <div style="font-size:14px;line-height:1.5">${h}</div>
+            </div>`).join('')}
+        </div>
+      </div>`:''}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   SUPERVISOR
+═══════════════════════════════════════════════════════════ */
+function supV(){
+  if(S.tab===0) return supProfile();
+  if(S.tab===1) return supTeam();
+  return supPerf();
+}
+
+function supProfile(){
+  const pr=DB.getProfile(S.user); const u=USERS[S.user]; const sq=SQUADS[u.squad];
+  if(!pr) return`<div class="pc"><div class="es">Perfil não encontrado.</div></div>`;
+  const dm=DISC_META[pr.profile];
+  return`
+    <div class="ph"><div class="pt">Meu Perfil DISC</div><div class="ps">${sq?sq.name:''}</div></div>
+    <div class="pc"><div style="max-width:480px">
+      <div style="background:${dm.color};border-radius:var(--r);padding:28px 32px;color:#fff;margin-bottom:16px">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.5px;opacity:.8">Seu perfil</div>
+        <div style="font-size:44px;font-weight:800;margin-top:4px">${pr.profile}</div>
+        <div style="font-size:20px;font-weight:700">${dm.name}</div>
+        <div style="font-size:14px;opacity:.85;margin-top:8px">${u.name}</div>
+      </div>
+      <div class="card">
+        <div style="font-size:14px;line-height:1.7;color:#374151">${PROFILES[pr.profile].insight}</div>
+        <div style="margin-top:20px">
+          <button class="bsm" onclick="resetP()">Refazer questionário</button>
+        </div>
+      </div>
+    </div></div>`;
+}
+function resetP(){
+  if(confirm('Refazer o questionário DISC?')){ DB.setProfile(S.user,null); S.view='setup'; S.setup={idx:0,ans:[]}; R(); }
+}
+
+function supTeam(){
+  const u=USERS[S.user]; const sq=SQUADS[u.squad];
+  const cls=Object.keys(USERS).filter(k=>USERS[k].sup===S.user);
+  const prs=DB.getProfiles();
+  return`
+    <div class="ph"><div class="pt">Meu Time</div><div class="ps">${cls.length} closer${cls.length!==1?'s':''} · ${sq?sq.name:''}</div></div>
+    <div class="pc">
+      ${cls.length===0?`<div class="es"><div style="font-size:40px">👥</div><div style="margin-top:12px;font-size:14px">Nenhum closer no squad ainda.</div></div>`:`
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${cls.map(k=>{
+          const cu=USERS[k]; const cp=prs[k];
+          const ms=closerMeetings(k); const cr=convRate(ms);
+          return`<div class="mc">
+            <div class="av" style="background:${cp?dc(cp.profile):'#9CA3AF'}">${ini(cu.name)}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-weight:700;font-size:14px">${cu.name}</div>
+              <div style="font-size:12px;color:var(--text2)">${ms.length} reunião${ms.length!==1?'s':''}${cr!==null?' · '+cr+'% conv.':''}</div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div class="db ${cp?cp.profile:'none'}">${cp?cp.profile:'?'}</div>
+              <div style="text-align:right">
+                <div style="font-size:20px;font-weight:800;color:${cr!==null?'var(--D)':'#9CA3AF'}">${cr!==null?cr+'%':'—'}</div>
+                <div style="font-size:11px;color:var(--text2)">conversão</div>
+              </div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`}
+    </div>`;
+}
+
+function supPerf(){
+  const u=USERS[S.user]; const sq=SQUADS[u.squad];
+  const ms=squadMeetings(u.squad);
+  const g=ms.filter(m=>m.outcome==='ganho').length;
+  const p=ms.filter(m=>m.outcome==='perdido').length;
+  const f=ms.filter(m=>m.outcome==='followup').length;
+  const cr=convRate(ms); const ps=pStats(ms); const mx=Math.max(...ps.map(x=>x.n),1);
+  const cls=Object.keys(USERS).filter(k=>USERS[k].sup===S.user);
+  const prs=DB.getProfiles();
+  return`
+    <div class="ph"><div class="pt">Performance do Time</div><div class="ps">${sq?sq.name:''}</div></div>
+    <div class="pc">
+      <div class="g4" style="margin-bottom:20px">
+        <div class="card"><div class="ct">Total</div><div class="cv">${ms.length}</div></div>
+        <div class="card"><div class="ct">Ganhos</div><div class="cv" style="color:#059669">${g}</div></div>
+        <div class="card"><div class="ct">Perdidos</div><div class="cv" style="color:#DC2626">${p}</div></div>
+        <div class="card"><div class="ct">Conversão</div><div class="cv" style="color:var(--D)">${cr!==null?cr+'%':'—'}</div></div>
+      </div>
+      <div class="g2" style="margin-bottom:20px">
+        <div class="card"><div class="st">Atendimentos por perfil</div>
+          ${ps.map(x=>`<div class="sbr"><div class="sbl" style="color:${dc(x.p)}">${x.p}</div><div class="sbt"><div class="sbf" style="width:${mx?x.n/mx*100:0}%;background:${dc(x.p)}"></div></div><div class="sbn">${x.n}</div></div>`).join('')}
+        </div>
+        <div class="card"><div class="st">Conversão por perfil</div>
+          ${ps.map(x=>`<div class="sbr"><div class="sbl" style="color:${dc(x.p)}">${x.p}</div><div class="sbt"><div class="sbf" style="width:${x.conv||0}%;background:${dc(x.p)}"></div></div><div class="sbn">${x.conv!==null?x.conv+'%':'—'}</div></div>`).join('')}
+        </div>
+      </div>
+      ${cls.length>0?`<div class="card"><div class="st">Ranking do time</div>
+        ${cls.map(k=>{
+          const cu=USERS[k]; const cp=prs[k];
+          const cm=closerMeetings(k); const cg=cm.filter(m=>m.outcome==='ganho').length;
+          const cd=cm.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+          const cc=cd?Math.round(cg/cd*100):null;
+          return`<div class="mr">
+            <div class="av" style="width:32px;height:32px;font-size:12px;background:${cp?dc(cp.profile):'#9CA3AF'}">${ini(cu.name)}</div>
+            <div style="flex:1">
+              <div style="font-weight:600;font-size:14px">${cu.name}</div>
+              <div style="font-size:12px;color:var(--text2)">${cm.length} reuniões${cp?' · '+cp.profile:''}</div>
+            </div>
+            <div style="font-size:20px;font-weight:800;color:${cc!==null?(cc>=50?'#059669':'#DC2626'):'#9CA3AF'}">${cc!==null?cc+'%':'—'}</div>
+          </div>`;
+        }).join('')}
+      </div>`:''}
+    </div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   GERENTE
+═══════════════════════════════════════════════════════════ */
+function gerenteV(){
+  if(S.tab===0) return gOverview();
+  if(S.tab===1) return gSquads();
+  return gVendedores();
+}
+
+function gOverview(){
+  const all=DB.getMeetings();
+  const g=all.filter(m=>m.outcome==='ganho').length;
+  const p=all.filter(m=>m.outcome==='perdido').length;
+  const f=all.filter(m=>m.outcome==='followup').length;
+  const cr=convRate(all); const ps=pStats(all); const mx=Math.max(...ps.map(x=>x.n),1);
+  const prs=DB.getProfiles();
+  const totalCl=Object.keys(USERS).filter(k=>USERS[k].role==='closer').length;
+  const setupCl=Object.keys(USERS).filter(k=>USERS[k].role==='closer'&&prs[k]).length;
+  return`
+    <div class="ph">
+      <div class="pt">Visão Geral</div>
+      <div class="ps">${new Date().toLocaleDateString('pt-BR',{day:'numeric',month:'long',year:'numeric'})}</div>
+    </div>
+    <div class="pc">
+      <div class="g4" style="margin-bottom:20px">
+        <div class="card"><div class="ct">Reuniões</div><div class="cv">${all.length}</div></div>
+        <div class="card"><div class="ct">Ganhos</div><div class="cv" style="color:#059669">${g}</div></div>
+        <div class="card"><div class="ct">Follow-up</div><div class="cv" style="color:#D97706">${f}</div></div>
+        <div class="card"><div class="ct">Conv. Geral</div><div class="cv" style="color:var(--D)">${cr!==null?cr+'%':'—'}</div></div>
+      </div>
+      <div class="g3" style="margin-bottom:20px">
+        ${Object.keys(SQUADS).map(sq=>{
+          const s=SQUADS[sq]; const sm=squadMeetings(sq);
+          const sg=sm.filter(m=>m.outcome==='ganho').length;
+          const sd=sm.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+          const sc=sd?Math.round(sg/sd*100):null;
+          const nCl=Object.keys(USERS).filter(k=>USERS[k].squad===sq&&USERS[k].role==='closer').length;
+          return`<div class="card">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+              <div style="width:10px;height:10px;border-radius:3px;background:${s.color}"></div>
+              <div style="font-weight:800;font-size:15px">${s.name}</div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div><div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase">Reuniões</div><div style="font-size:26px;font-weight:800">${sm.length}</div></div>
+              <div><div style="font-size:11px;color:var(--text2);font-weight:600;text-transform:uppercase">Conversão</div><div style="font-size:26px;font-weight:800;color:${sc!==null?'var(--D)':'#9CA3AF'}">${sc!==null?sc+'%':'—'}</div></div>
+            </div>
+            <div style="font-size:12px;color:var(--text2)">${nCl} closers · Sup: ${USERS[s.sup].name.split(' ')[0]}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="g2">
+        <div class="card"><div class="st">Reuniões por perfil (empresa toda)</div>
+          ${ps.map(x=>`<div class="sbr"><div class="sbl" style="color:${dc(x.p)}">${x.p}</div><div class="sbt"><div class="sbf" style="width:${mx?x.n/mx*100:0}%;background:${dc(x.p)}"></div></div><div class="sbn">${x.n}</div></div>`).join('')}
+        </div>
+        <div class="card"><div class="st">Conversão por perfil (empresa toda)</div>
+          ${ps.map(x=>`<div class="sbr"><div class="sbl" style="color:${dc(x.p)}">${x.p}</div><div class="sbt"><div class="sbf" style="width:${x.conv||0}%;background:${dc(x.p)}"></div></div><div class="sbn">${x.conv!==null?x.conv+'%':'—'}</div></div>`).join('')}
+        </div>
+      </div>
+      <div style="margin-top:16px;font-size:13px;color:var(--text2)">
+        ${setupCl} de ${totalCl} closers com perfil DISC preenchido.
+      </div>
+    </div>`;
+}
+
+function gSquads(){
+  const prs=DB.getProfiles();
+  return`
+    <div class="ph"><div class="pt">Squads</div><div class="ps">Detalhamento por squad e supervisor</div></div>
+    <div class="pc">
+      ${Object.keys(SQUADS).map(sq=>{
+        const s=SQUADS[sq]; const sup=USERS[s.sup]; const sp=prs[s.sup];
+        const cls=Object.keys(USERS).filter(k=>USERS[k].squad===sq&&USERS[k].role==='closer');
+        return`<div style="margin-bottom:32px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+            <div style="width:14px;height:14px;border-radius:4px;background:${s.color}"></div>
+            <div style="font-size:18px;font-weight:800">${s.name}</div>
+            <div style="font-size:13px;color:var(--text2)">Supervisor: ${sup.name}</div>
+            <div class="db ${sp?sp.profile:'none'}">${sp?sp.profile:'?'}</div>
+          </div>
+          ${cls.length===0?`<div style="color:var(--text2);font-size:14px;padding:12px 0;font-style:italic">Nenhum closer ainda.</div>`:`
+          <div style="display:flex;flex-direction:column;gap:8px">
+            ${cls.map(k=>{
+              const cu=USERS[k]; const cp=prs[k];
+              const ms=closerMeetings(k); const cg=ms.filter(m=>m.outcome==='ganho').length;
+              const cd=ms.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+              const cc=cd?Math.round(cg/cd*100):null;
+              return`<div class="mc">
+                <div class="av" style="background:${cp?dc(cp.profile):'#9CA3AF'}">${ini(cu.name)}</div>
+                <div style="flex:1;min-width:0"><div style="font-weight:700;font-size:14px">${cu.name}</div><div style="font-size:12px;color:var(--text2)">${ms.length} reuniões</div></div>
+                <div style="display:flex;align-items:center;gap:10px">
+                  <div class="db ${cp?cp.profile:'none'}">${cp?cp.profile:'?'}</div>
+                  <div style="text-align:right"><div style="font-size:20px;font-weight:800;color:${cc!==null?'var(--D)':'#9CA3AF'}">${cc!==null?cc+'%':'—'}</div><div style="font-size:11px;color:var(--text2)">conv.</div></div>
+                </div>
+              </div>`;
+            }).join('')}
+          </div>`}
+        </div>`;
+      }).join('')}
+    </div>`;
+}
+
+function gVendedores(){
+  const prs=DB.getProfiles();
+  const cls=Object.keys(USERS).filter(k=>USERS[k].role==='closer');
+  const all=DB.getMeetings();
+  const sorted=cls.sort((a,b)=>{
+    const am=all.filter(m=>m.closer===a); const bm=all.filter(m=>m.closer===b);
+    const ag=am.filter(m=>m.outcome==='ganho').length; const ad=am.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+    const bg=bm.filter(m=>m.outcome==='ganho').length; const bd=bm.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+    return (bd?bg/bd:-1)-(ad?ag/ad:-1);
+  });
+  return`
+    <div class="ph"><div class="pt">Vendedores</div><div class="ps">${cls.length} closers · ordenados por conversão</div></div>
+    <div class="pc"><div style="display:flex;flex-direction:column;gap:10px">
+      ${sorted.map(k=>{
+        const cu=USERS[k]; const cp=prs[k]; const sq=SQUADS[cu.squad];
+        const ms=all.filter(m=>m.closer===k);
+        const mg=ms.filter(m=>m.outcome==='ganho').length;
+        const md=ms.filter(m=>m.outcome==='ganho'||m.outcome==='perdido').length;
+        const mc=md?Math.round(mg/md*100):null;
+        return`<div class="mc">
+          <div class="av" style="background:${cp?dc(cp.profile):'#9CA3AF'}">${ini(cu.name)}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:14px">${cu.name}</div>
+            <div style="font-size:12px;color:var(--text2)">${sq?sq.name:'—'} · ${ms.length} reuniões</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px">
+            <div class="db ${cp?cp.profile:'none'}">${cp?cp.profile:'?'}</div>
+            <div style="text-align:right">
+              <div style="font-size:22px;font-weight:800;color:${mc!==null?'var(--D)':'#9CA3AF'}">${mc!==null?mc+'%':'—'}</div>
+              <div style="font-size:11px;color:var(--text2)">conversão</div>
+            </div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div></div>`;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   BIND & INIT
+═══════════════════════════════════════════════════════════ */
+function bind(){
+  const lp=document.getElementById('lp'); if(lp) lp.addEventListener('keydown',e=>{if(e.key==='Enter')login();});
+  const lu=document.getElementById('lu'); if(lu) lu.addEventListener('keydown',e=>{if(e.key==='Enter')lp&&lp.focus();});
+}
+
+R();
+</script>
+</body>
+</html>
